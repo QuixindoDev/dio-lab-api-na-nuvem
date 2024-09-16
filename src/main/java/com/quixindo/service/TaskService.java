@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TaskService {
-    List<Task> findAll();
-    Task findById(UUID id);
+    List<TaskDTO> findAll();
+    TaskDTO findById(UUID id);
     TaskDTO save(UUID user_id, TaskDTO taskToSave);
     TaskDTO update(UUID id, TaskDTO taskToUpdate);
     Task delete(UUID id);

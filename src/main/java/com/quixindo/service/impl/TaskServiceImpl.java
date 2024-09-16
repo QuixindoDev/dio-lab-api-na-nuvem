@@ -24,14 +24,26 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findAll() {
-        return taskRepository.findAll();
+    public List<TaskDTO> findAll() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream().map(
+                task -> new TaskDTO(
+                        task.getDescription(),
+                        task.isCompleted(),
+                        task.getUser().getId()
+                ))
+                .toList();
     }
 
     @Override
-    public Task findById(UUID id) {
-        return taskRepository.findById(id).orElseThrow(() ->
+    public TaskDTO findById(UUID id) {
+        Task task = taskRepository.findById(id).orElseThrow(() ->
                 new TaskNotFoundException("Tarefa nao encontrada pelo id passado."));
+        return new TaskDTO(
+                task.getDescription(),
+                task.isCompleted(),
+                task.getUser().getId()
+        );
     }
 
     @Override

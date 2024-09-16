@@ -22,12 +22,12 @@ public class TaskController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<Task>> getALl(){
+    public ResponseEntity<List<TaskDTO>> getALl(){
         return ResponseEntity.status(HttpStatus.OK).body(taskService.findAll());
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<Task> getById(@PathVariable @Valid UUID id){
+    public ResponseEntity<TaskDTO> getById(@PathVariable @Valid UUID id){
         return ResponseEntity.status(HttpStatus.OK).body(taskService.findById(id));
     }
 
