@@ -22,14 +22,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+        List<User> users = userRepository.findAll();
+
+        return users.stream().map(
+                user -> new UserDTO(user.getName(), user.getEmail(), user.getPassword()))
+                .toList();
     }
 
     @Override
-    public User findById(UUID id) {
-        return userRepository.findById(id).orElseThrow(
+    public UserDTO findById(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException("Usuario com o id: " + id + " nao foi encontrado."));
+
+        return new UserDTO(
+                user.getName(),
+                user.getEmail(),
+                user.getPassword()
+        );
     }
 
     @Override

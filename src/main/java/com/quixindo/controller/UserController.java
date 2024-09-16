@@ -21,12 +21,12 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable @Valid UUID id){
+    public ResponseEntity<UserDTO> getUserById(@PathVariable @Valid UUID id){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers(){
+    public ResponseEntity<List<UserDTO>> getUsers(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
 
