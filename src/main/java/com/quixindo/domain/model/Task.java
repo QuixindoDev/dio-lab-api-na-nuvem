@@ -15,7 +15,7 @@ public class Task {
     private UUID id;
 
     private String description;
-    private boolean status;
+    private boolean completed;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

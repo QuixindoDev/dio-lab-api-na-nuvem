@@ -1,12 +1,16 @@
 package com.quixindo.service.impl;
 
 import com.quixindo.domain.model.Task;
+import com.quixindo.domain.model.User;
 import com.quixindo.domain.repository.TaskRepository;
 import com.quixindo.domain.repository.UserRepository;
 import com.quixindo.dto.TaskDTO;
+import com.quixindo.exceptions.TaskNotFoundException;
+import com.quixindo.exceptions.UserNotFoundException;
 import com.quixindo.service.TaskService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,23 +24,49 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task findAll() {
-        return null;
+    public List<Task> findAll() {
+        return taskRepository.findAll();
     }
 
     @Override
     public Task findById(UUID id) {
-        return null;
+        return taskRepository.findById(id).orElseThrow(() ->
+                new TaskNotFoundException("Tarefa nao encontrada pelo id passado."));
     }
 
     @Override
-    public Task save(TaskDTO taskToSave) {
-        return null;
+    public TaskDTO save(UUID user_id, TaskDTO taskToSave) {
+        User user = userRepository.findById(user_id).orElseThrow(
+                () -> new UserNotFoundException("Usuario nao encontrado pelo id passado.")
+        );
+        Task task = new Task();
+        task.setDescription(taskToSave.description());
+        task.setCompleted(taskToSave.status());
+        task.setUser(user);
+
+        Task savedTask = taskRepository.save(task);
+        return new TaskDTO(
+                savedTask.getDescription(),
+                savedTask.isCompleted(),
+                savedTask.getUser().getId()
+        );
     }
 
     @Override
-    public Task update(UUID id, TaskDTO taskToUpdate) {
-        return null;
+    public TaskDTO update(UUID id, TaskDTO taskToUpdate) {
+        Task existingTask = taskRepository.findById(id).orElseThrow(
+                () -> new TaskNotFoundException("Task nao encontrado pelo id informado.")
+        );
+
+        existingTask.setDescription(taskToUpdate.description());
+        existingTask.setCompleted(taskToUpdate.status());
+
+        Task updatedTask = taskRepository.save(existingTask);
+        return new TaskDTO(
+                updatedTask.getDescription(),
+                updatedTask.isCompleted(),
+                updatedTask.getUser().getId()
+        );
     }
 
     @Override

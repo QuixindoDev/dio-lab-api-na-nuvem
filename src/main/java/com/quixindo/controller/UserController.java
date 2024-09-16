@@ -4,7 +4,6 @@ import com.quixindo.domain.model.User;
 import com.quixindo.dto.UserDTO;
 import com.quixindo.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/action")
 public class UserController {
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService){
+        this.userService = userService;
+    }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable @Valid UUID id){

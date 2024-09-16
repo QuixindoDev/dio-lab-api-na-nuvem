@@ -14,9 +14,14 @@ import java.util.UUID;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(unique = true)
     private UUID id;
+
     private String name;
+
+    @Column(unique = true)
     private String email;
+
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

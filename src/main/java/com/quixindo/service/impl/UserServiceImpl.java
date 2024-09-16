@@ -3,6 +3,7 @@ package com.quixindo.service.impl;
 import com.quixindo.domain.model.User;
 import com.quixindo.domain.repository.UserRepository;
 import com.quixindo.dto.UserDTO;
+import com.quixindo.exceptions.BadRequestException;
 import com.quixindo.exceptions.UserNotFoundException;
 import com.quixindo.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -28,11 +29,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(UUID id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User with ID " + id + " not found"));
+                () -> new UserNotFoundException("Usuario com o id: " + id + " nao foi encontrado."));
     }
 
     @Override
     public User save(UserDTO userToSave) {
+        Optional<User> existingUser = userRepository.findByEmail(userToSave.email());
+        if (existingUser.isPresent())
+            throw new BadRequestException("O email do usuario ja existe");
+
         User user = new User();
         BeanUtils.copyProperties(userToSave, user);
         return userRepository.save(user);
